@@ -14,7 +14,9 @@ app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(bodyParser.urlencoded());
 app.post('/api/shorturl', (req, res, next) => {
   const {url} = req.body;
-  dns.lookup(url.replace(/^https?:\/\//i,''), (err, address, family) => {    
+  const urlRegex = new RegExp(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/igm);
+  const domain = urlRegex.exec(url)[1] || '';
+  dns.lookup(domain, (err, address, family) => {    
     if (err) res.status(200).send({error: 'invalid url'});
     next();
   })  
