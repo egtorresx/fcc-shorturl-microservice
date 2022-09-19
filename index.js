@@ -14,7 +14,7 @@ app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(bodyParser.urlencoded());
 app.post('/api/shorturl', (req, res, next) => {
   const {url} = req.body;
-  dns.lookup(url, (err, address, family) => {    
+  dns.lookup(url.replace(/^https?:\/\//i,''), (err, address, family) => {    
     if (err) res.status(200).send({error: 'invalid url'});
     next();
   })  
